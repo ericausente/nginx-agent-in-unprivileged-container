@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-subject
+spec:
+  containers:
+  - args:
+    - --server-host
+    - 10.96.192.242
+    - --tls-skip-verify
+    - --server-grpcport
+    - "443"
+    - --tls-enable
+    image: magic:5000/nplus-agent:0.1
+    imagePullPolicy: Always
+    name: test-subject
+    stdin: true
+    stdinOnce: true
+    tty: true
+    volumeMounts:
+    - name: nginx-ssl
+      mountPath: "/etc/nginx/ssl"
+      readOnly: true
+  volumes:
+  - name: nginx-ssl
+    secret:
+      secretName: io-jupiter-kit
+      items:
+      - key: tls.crt
+        path: io.jupiter.kit.crt
+      - key: tls.key
+        path: io.jupiter.kit.key
